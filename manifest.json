@@ -1,7 +1,7 @@
 {
-  "name": "PANKA PDCA",
-  "short_name": "PANKA",
-  "description": "AIが続け方を設計するPDCAジャーナル",
+  "name": "PANKA PACE",
+  "short_name": "PANKA PACE",
+  "description": "AIがあなただけの続け方を設計する習慣化サポートアプリ",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#E6ECF3",
