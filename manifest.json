@@ -2,20 +2,21 @@
   "name": "PANKA PACE",
   "short_name": "PANKA PACE",
   "description": "AIがあなただけの続け方を設計する習慣化サポートアプリ",
-  "start_url": "/",
+  "start_url": "/panka-pdca/",
   "display": "standalone",
   "background_color": "#E6ECF3",
   "theme_color": "#1E2A3A",
   "icons": [
     {
-      "src": "/icon-192.png",
+      "src": "./icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/icon-512.png",
+      "src": "./icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
-  ]
+  ],
+  "scope": "/panka-pdca/"
 }
