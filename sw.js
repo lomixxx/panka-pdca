@@ -1,4 +1,4 @@
-const CACHE_NAME = "panka-pdca-v12";
+const CACHE_NAME = "panka-pdca-v13";
 const BASE = new URL("./", self.location.href);
 const urlsToCache = [
   new URL("./", BASE).href,
