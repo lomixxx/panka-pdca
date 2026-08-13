@@ -1,17 +1,17 @@
-const CACHE_NAME = "panka-pdca-v16";
+const CACHE_NAME = "panka-pdca-v18";
 const BASE = new URL("./", self.location.href);
 const urlsToCache = [
   new URL("./", BASE).href,
   new URL("./index.html", BASE).href,
   new URL("./manifest.json", BASE).href,
-  new URL("./assets/index.js?v=16", BASE).href,
+  new URL("./assets/index.js?v=18", BASE).href,
   ...[
     "panka_01_unrecorded.png", "panka_02_excellent.png",
     "panka_03_good.png", "panka_04_slow.png",
     "panka_05_very_slow.png", "panka_06_broken_streak.png",
     "panka_07_long_absence.png", "panka_08_restart.png",
     "panka_09_streak.png", "panka_10_long_streak.png",
-  ].map((name) => new URL(`./assets/panka/${name}`, BASE).href),
+  ].map((name) => new URL(`./assets/panka/${name}?v=17`, BASE).href),
   new URL("./icon-192.png?v=15", BASE).href,
   new URL("./icon-512.png?v=15", BASE).href,
   new URL("./apple-touch-icon.png?v=15", BASE).href,
