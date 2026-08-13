@@ -70,12 +70,12 @@ Error generating stack: `+i.message+`
   .onboarding-feature-title { font-size: 13px; font-weight: 700; color: #E6ECF3; margin-bottom: 3px; }
   .onboarding-feature-desc { font-size: 12px; color: #A9B7C6; line-height: 1.5; }
 
-  .panka-container { display: flex; flex-direction: column; align-items: center; padding: 8px 0 12px; min-height: 178px; }
+  .panka-container { display: flex; flex-direction: column; align-items: center; padding: 6px 0 8px; min-height: 164px; }
   .panka-character { width: min(42vw, 160px); height: 150px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
   .panka-character img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: center bottom; }
   .panka-face { width: 80px; height: 80px; }
   .panka-face svg { width: 100%; height: 100%; }
-  .panka-status { margin-top: 8px; font-size: 13px; color: #5B6E8A; font-weight: 500; }
+  .panka-status { margin-top: -8px; font-size: 13px; color: #5B6E8A; font-weight: 500; }
 
   .nav { display: flex; background: var(--card-bg, #fff); border-radius: 16px; margin: 0 16px 20px; padding: 4px; box-shadow: 0 2px 8px rgba(30,42,58,0.08); }
   .nav-btn { flex: 1; padding: 10px 4px; border: none; background: transparent; border-radius: 12px; font-family: 'Noto Sans JP', sans-serif; font-size: 11px; color: #5B6E8A; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 3px; }
