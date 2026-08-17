@@ -1,10 +1,10 @@
-const CACHE_NAME = "panka-pdca-v23";
+const CACHE_NAME = "panka-pdca-v24";
 const BASE = new URL("./", self.location.href);
 const urlsToCache = [
   new URL("./", BASE).href,
   new URL("./index.html", BASE).href,
   new URL("./manifest.json", BASE).href,
-  new URL("./assets/index.js?v=23", BASE).href,
+  new URL("./assets/index.js?v=24", BASE).href,
   ...[
     "panka_01_unrecorded.png", "panka_02_excellent.png",
     "panka_03_good.png", "panka_04_slow.png",
