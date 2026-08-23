@@ -23,8 +23,8 @@
 		}
 	],
 	"vars": {
-		"ALLOWED_ORIGIN": "https://<GITHUB_USER>.github.io",
-		"APP_URL": "https://<GITHUB_USER>.github.io/<REPOSITORY>/",
+		"ALLOWED_ORIGIN": "https://lomixxx.github.io",
+    "APP_URL": "https://lomixxx.github.io/panka-pdca/",
 		"VAPID_SUBJECT": "purojekuto71@gmail.com>"
 	}
 }
