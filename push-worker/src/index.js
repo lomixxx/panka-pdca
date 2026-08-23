@@ -67,12 +67,10 @@ async function sendPush(env, entry, notification) {
 }
 
 async function processSubscriptions(env, now = new Date()) {
-  const summary = { ranAt: now.toISOString(), scanned: 0, due: 0, sent: 0, failed: 0 };
   let cursor;
   do {
     const page = await env.PUSH_SUBSCRIPTIONS.list({ prefix: "subscription:", cursor });
     for (const key of page.keys) {
-      summary.scanned += 1;
       const entry = await env.PUSH_SUBSCRIPTIONS.get(key.name, "json");
       if (!entry?.subscription || !entry?.settings) continue;
       let local;
@@ -82,7 +80,6 @@ async function processSubscriptions(env, now = new Date()) {
       const dailyDue = settings.dailyEnabled && dailyDayAllowed && local.hour === settings.dailyHour && local.minute === settings.dailyMinute && entry.lastDaily !== local.date;
       const weeklyDue = settings.weeklyEnabled && local.weekday === settings.weeklyDay && local.hour === settings.weeklyHour && local.minute === settings.weeklyMinute && entry.lastWeekly !== local.date;
       if (!dailyDue && !weeklyDue) continue;
-      summary.due += 1;
       const notification = dailyDue
         ? { title: "PANKA PACE", body: "今日の記録をつけましょう 📝", url: env.APP_URL, tag: "panka-daily" }
         : { title: "PANKA PACE", body: "今週の振り返りをしましょう 📈", url: env.APP_URL, tag: "panka-weekly" };
@@ -90,23 +87,18 @@ async function processSubscriptions(env, now = new Date()) {
         const response = await sendPush(env, entry, notification);
         if (response.status === 404 || response.status === 410) await env.PUSH_SUBSCRIPTIONS.delete(key.name);
         else if (response.ok) {
-          summary.sent += 1;
           if (dailyDue) entry.lastDaily = local.date;
           if (weeklyDue) entry.lastWeekly = local.date;
           await env.PUSH_SUBSCRIPTIONS.put(key.name, JSON.stringify(entry));
         } else {
-          summary.failed += 1;
           console.error(JSON.stringify({ event: "push_failed", status: response.status, key: key.name }));
         }
       } catch (error) {
-        summary.failed += 1;
         console.error(JSON.stringify({ event: "push_error", message: String(error), key: key.name }));
       }
     }
     cursor = page.list_complete ? undefined : page.cursor;
   } while (cursor);
-  await env.PUSH_SUBSCRIPTIONS.put("diagnostics:last-run", JSON.stringify(summary));
-  return summary;
 }
 
 export default {
@@ -116,18 +108,6 @@ export default {
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers });
     const url = new URL(request.url);
     if (request.method === "GET" && url.pathname === "/vapid-public-key") return json({ publicKey: env.VAPID_PUBLIC_KEY }, 200, headers);
-    if (request.method === "GET" && url.pathname === "/debug/status") {
-      const lastRun = await env.PUSH_SUBSCRIPTIONS.get("diagnostics:last-run", "json");
-      return json({
-        ok: Boolean(env.VAPID_PUBLIC_KEY && env.VAPID_PRIVATE_KEY && env.PUSH_SUBSCRIPTIONS),
-        publicKeyConfigured: Boolean(env.VAPID_PUBLIC_KEY),
-        privateKeyConfigured: Boolean(env.VAPID_PRIVATE_KEY),
-        vapidSubjectValid: /^mailto:.+@.+/.test(env.VAPID_SUBJECT || ""),
-        kvConfigured: Boolean(env.PUSH_SUBSCRIPTIONS),
-        serverTime: new Date().toISOString(),
-        lastCronRun: lastRun || null,
-      }, 200, headers);
-    }
     if (request.method === "POST" && url.pathname === "/subscribe") {
       if (Number(request.headers.get("content-length") || 0) > 16_384) return json({ error: "payload_too_large" }, 413, headers);
       const body = await request.json();
@@ -142,25 +122,6 @@ export default {
         updatedAt: new Date().toISOString(),
       }));
       return json({ ok: true }, 201, headers);
-    }
-    if (request.method === "POST" && url.pathname === "/debug/test-push") {
-      const body = await request.json();
-      if (!validSubscription(body.subscription)) return json({ error: "invalid_subscription" }, 400, headers);
-      const key = await subscriptionKey(body.subscription.endpoint);
-      const rateKey = `debug-test:${key}`;
-      if (await env.PUSH_SUBSCRIPTIONS.get(rateKey)) return json({ error: "rate_limited", retryAfterSeconds: 30 }, 429, headers);
-      await env.PUSH_SUBSCRIPTIONS.put(rateKey, "1", { expirationTtl: 60 });
-      try {
-        const response = await sendPush(env, { subscription: body.subscription }, {
-          title: "PANKA PACE 通知テスト",
-          body: "通知設定は正常に動作しています ✅",
-          url: env.APP_URL,
-          tag: "panka-debug-test",
-        });
-        return json({ ok: response.ok, pushStatus: response.status }, response.ok ? 200 : 502, headers);
-      } catch (error) {
-        return json({ error: "push_exception", message: String(error) }, 502, headers);
-      }
     }
     if (request.method === "DELETE" && url.pathname === "/subscribe") {
       const body = await request.json();
