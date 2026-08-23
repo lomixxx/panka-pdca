@@ -118,7 +118,8 @@
   }
 
   function installDebugPanel() {
-    if (new URLSearchParams(location.search).get("notificationDebug") !== "1") return;
+    const standalone = window.matchMedia?.("(display-mode: standalone)").matches || window.navigator.standalone === true;
+    if (new URLSearchParams(location.search).get("notificationDebug") !== "1" && !standalone) return;
     const button = document.createElement("button");
     button.textContent = "🔔 通知診断";
     button.style.cssText = "position:fixed;right:12px;bottom:90px;z-index:99998;padding:12px 16px;border:0;border-radius:999px;background:#1d2b3e;color:white;font-weight:700;box-shadow:0 4px 16px #0003";
