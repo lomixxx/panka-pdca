@@ -1,0 +1,17 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "panka-pace-push",
+  "main": "src/index.js",
+  "compatibility_date": "2026-08-23",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true, "head_sampling_rate": 1 },
+  "triggers": { "crons": ["*/5 * * * *"] },
+  "kv_namespaces": [
+    { "binding": "PUSH_SUBSCRIPTIONS", "id": "<KV_NAMESPACE_ID>" }
+  ],
+  "vars": {
+    "ALLOWED_ORIGIN": "https://<GITHUB_USER>.github.io",
+    "APP_URL": "https://<GITHUB_USER>.github.io/<REPOSITORY>/",
+    "VAPID_SUBJECT": "mailto:<YOUR_EMAIL>"
+  }
+}
